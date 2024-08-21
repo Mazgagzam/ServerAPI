@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, PlainTextResponse
+import uvicorn
 from pathlib import Path
 
 from dotenv import dotenv_values
@@ -37,3 +38,6 @@ async def get_file_or_directory(secret_code: str, path: str):
         return PlainTextResponse(content=file_content)
 
     raise HTTPException(status_code=400, detail="Invalid path type")
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8001)
