@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, PlainTextResponse
 import uvicorn
 from pathlib import Path
+import hashlib
+
 
 from dotenv import dotenv_values
 
@@ -20,6 +22,8 @@ async def main():
 
 @app.get("/get/{secret_code}/{path:path}")
 async def get_file_or_directory(secret_code: str, path: str):
+    secret_code = hashlib.sha512(secret_code.encode()).hexdigest()
+
     if secret_code != SECRET_CODE:
         raise HTTPException(status_code=403, detail="Forbidden")
 
@@ -40,4 +44,4 @@ async def get_file_or_directory(secret_code: str, path: str):
     raise HTTPException(status_code=400, detail="Invalid path type")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8001)
+    uvicorn.run(app, host="127.0.0.1", port=8009)
